@@ -1,10 +1,11 @@
 // variables2.rs
 // Make me compile! Execute the command `rustlings hint variables2` if you want a hint :)
 
-// I AM NOT DONE
+// I AM NOT DO
 
 fn main() {
-    let x;
+    let x:i64;
+    x = 64;
     if x == 10 {
         println!("Ten!");
     } else {
