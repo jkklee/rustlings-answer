@@ -33,15 +33,48 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
-
 impl From<&str> for Person {
-    fn from(s: &str) -> Person {
+    fn from(s: &str) -> Self {
+        // ljk s.split()生成一个迭代器, 其next()方法回返回Option类型, 即Some(T) or None
+        // 可以有更好的办法,不需要third变量
+        let mut split = s.split(",");
+        let _name = split.next();
+        let _age = split.next();
+        let third = split.next();
+
+        if third != None
+            || (_name == None || _name == Some(""))
+            || (_age == None || _age == Some(""))
+        {
+            return Person::default();
+        } else {
+            let name = match _name {
+                None | Some("") => Person::default().name,
+                _ => _name.unwrap().to_string(),
+            };
+
+            let age = if let Ok(age) = _age.unwrap().parse::<usize>() {
+                // ljk if let
+                age
+            } else {
+                return Person::default();
+            };
+            Person { name, age }
+        }
+
+        // let age = match _age {
+        //     None | Some("") => Person::default().age,  // ljk 分支合一写法
+        //     _ => _age
+        //         .unwrap()
+        //         .parse::<usize>()
+        //         .unwrap_or(Person::default().age),
+        // };
     }
 }
 
 fn main() {
     // Use the `from` function
+    // ljk 为结构体实现From之后可以使用一下用法来”实例化“对象
     let p1 = Person::from("Mark,20");
     // Since From is implemented for Person, we should be able to use Into
     let p2: Person = "Gerald,70".into();

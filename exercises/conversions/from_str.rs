@@ -11,8 +11,6 @@ struct Person {
     age: usize,
 }
 
-// I AM NOT DONE
-
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
 // 2. Split the given string on the commas present in it
@@ -24,8 +22,22 @@ struct Person {
 // If everything goes well, then return a Result of a Person object
 
 impl FromStr for Person {
-    type Err = Box<dyn error::Error>;
+    type Err = Box<dyn error::Error>; // ljk 在允许转换出错的trint种，必须要定义一个“动态”错误类型，以便可以兼容不同种的错误
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        let split: Vec<&str> = s.split(",").collect();
+        if split.len() != 2 {
+            return Err("only 2 is valid!".into()); // ljk 这个into是将&str类型转换成上面定义的Err类型
+        }
+
+        let name = split[0];
+        let age = split[1].parse()?;
+        if name == "" {
+            return Err("must has a valid name!".into());
+        }
+        Ok(Self {
+            name: name.to_string(),
+            age,
+        })
     }
 }
 

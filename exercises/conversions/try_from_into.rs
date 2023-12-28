@@ -1,4 +1,4 @@
-// TryFrom is a simple and safe type conversion that may fail in a controlled way under some circumstances.
+// TryFrom is a simple and safe type conversion that may fail in a controlled way under some circumstances.（转换可能会以可控的方式失败）
 // Basically, this is the same as From. The main difference is that this should return a Result type
 // instead of the target type itself.
 // You can read more about it at https://doc.rust-lang.org/std/convert/trait.TryFrom.html
@@ -12,8 +12,6 @@ struct Color {
     blue: u8,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
 // You need to create an implementation for a tuple of three integers,
@@ -24,21 +22,49 @@ struct Color {
 // Also note that correct RGB color values must be integers in the 0..=255 range.
 
 // Tuple implementation
+// 只为3元素元组实现
 impl TryFrom<(i16, i16, i16)> for Color {
-    type Error = Box<dyn error::Error>;
-    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {}
+    //ljk TryFrom trait 的定义中，type Error 是 TryFrom trait 的实现者必须定义的类型。这个类型用于表示转换失败时返回的错误。
+    type Error = Box<dyn error::Error>; // ljk type Error 固定写法
+                                        //TryFrom trait 的实现者将 Err() 类型包装为 Box<dyn error::Error> 类型。这样做的原因是 Box<dyn error::Error> 类型是 Rust 中表示错误的通用类型。它可以包装任何实现了 Error trait 的类型。
+    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        // ljk 验证每个值都在0-255之间, 不需要用if来判断
+        let red = u8::try_from(tuple.0)?;
+        let green = u8::try_from(tuple.1)?;
+        let blue = u8::try_from(tuple.2)?;
+
+        Ok(Color { red, green, blue })
+        // 不太明白的是Err(T) 这个返回类型就不需要管了吗
+    }
 }
 
 // Array implementation
+// ljk 为符合数据格式的数组实现
 impl TryFrom<[i16; 3]> for Color {
-    type Error = Box<dyn error::Error>;
-    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {}
+    type Error = Box<dyn error::Error>; // ljk TryFrom trait 的实现者将 Err() 类型的值包装为 Box<dyn error::Error> 类型
+    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let red = u8::try_from(arr[0])?;
+        let green = u8::try_from(arr[1])?;
+        let blue = u8::try_from(arr[2])?;
+
+        Ok(Self { red, green, blue })
+    }
 }
 
 // Slice implementation
 impl TryFrom<&[i16]> for Color {
     type Error = Box<dyn error::Error>;
-    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {}
+    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err("Slice must contain exactly three elements".into());
+        }
+
+        let red = u8::try_from(slice[0])?;
+        let green = u8::try_from(slice[1])?;
+        let blue = u8::try_from(slice[2])?;
+
+        Ok(Color { red, green, blue })
+    }
 }
 
 fn main() {

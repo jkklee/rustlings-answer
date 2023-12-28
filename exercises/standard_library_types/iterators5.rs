@@ -11,11 +11,12 @@
 //
 // Make the code compile and the tests pass.
 
-// I AM NOT DONE
+// ljk 多用迭代器，可减少显式循环的使用for、loop等，这更符合函数式编程的风格。
+//迭代器大体有两类方法：1.Methods that Consume the Iterator； 2. Methods that Produce Other Iterators
 
 use std::collections::HashMap;
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Progress {
     None,
     Some,
@@ -32,9 +33,9 @@ fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
     count
 }
 
+//1 filter()
 fn count_iterator(map: &HashMap<String, Progress>, value: Progress) -> usize {
-    // map is a hashmap with String keys and Progress values.
-    // map = { "variables1": Complete, "from_str": None, ... }
+    map.values().filter(|&val| val == &value).count()
 }
 
 fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
@@ -50,9 +51,10 @@ fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progres
 }
 
 fn count_collection_iterator(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
-    // collection is a slice of hashmaps.
-    // collection = [{ "variables1": Complete, "from_str": None, ... },
-    //     { "variables2": Complete, ... }, ... ]
+    collection
+        .iter()
+        .map(|map| map.values().filter(|&val| val == &value).count())
+        .sum()
 }
 
 #[cfg(test)]
@@ -68,6 +70,7 @@ mod tests {
     #[test]
     fn count_equals_for() {
         let map = get_map();
+        println!("{:?}", map);
         assert_eq!(
             count_for(&map, Progress::Complete),
             count_iterator(&map, Progress::Complete)

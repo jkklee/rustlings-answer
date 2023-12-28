@@ -1,17 +1,14 @@
 // iterators4.rs
 
-// I AM NOT DONE
 
 pub fn factorial(num: u64) -> u64 {
-    // Complete this function to return the factorial of num
-    // Do not use:
-    // - return
-    // Try not to use:
-    // - imperative style loops (for, while)
-    // - additional variables
-    // For an extra challenge, don't use:
-    // - recursion
-    // Execute `rustlings hint iterators4` for hints.
+    (1..=num).fold(1, |acc, x| acc * x) //ljk fold函数牛啊，它可以将一个迭代器中的所有元素折叠成一个单一的值，fold函数接受两个参数：一个累加器初始值和一个闭包。闭包接受两个参数：累加器和当前元素。在每次迭代中，闭包将累加器乘以当前元素，并返回新的累加器值。最后，fold函数返回累加器的最终值
+}
+// println!("{}", factorial(10));
+
+//下面是一个同样用迭代器方式实现的斐波那契数列函数
+fn fibonacci(num: u64) -> u64 {
+    (0..num).fold((0, 1), |acc, _| (acc.1, acc.0 + acc.1)).0
 }
 
 #[cfg(test)]

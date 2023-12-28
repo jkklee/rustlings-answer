@@ -16,10 +16,4 @@ fn main() {
         _ => println!("no match"),
     }
     y; // Fix without deleting this line.
-
-
-
-
-
-
 }

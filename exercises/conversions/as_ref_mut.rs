@@ -2,17 +2,17 @@
 // Read more about them at https://doc.rust-lang.org/std/convert/trait.AsRef.html
 // and https://doc.rust-lang.org/std/convert/trait.AsMut.html, respectively.
 
-// I AM NOT DONE
-
 // Obtain the number of bytes (not characters) in the given argument
 // Add the AsRef trait appropriately as a trait bound
-fn byte_counter<T>(arg: T) -> usize {
+// ljk 在 Rust 中，函数签名中的 <T> 表示该函数是一个泛型函数，可以接受任意类型的参数
+//ljk 需要添加 AsRef<str> trait 约束作为泛型参数 T 的 trait bound。这样，函数就能够调用 as_ref() 方法来将参数转换为字符串引用
+fn byte_counter<T: AsRef<str>>(arg: T) -> usize {
     arg.as_ref().as_bytes().len()
 }
 
 // Obtain the number of characters (not bytes) in the given argument
 // Add the AsRef trait appropriately as a trait bound
-fn char_counter<T>(arg: T) -> usize {
+fn char_counter<T: AsRef<str>>(arg: T) -> usize {
     arg.as_ref().chars().count()
 }
 
